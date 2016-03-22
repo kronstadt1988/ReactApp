@@ -2,37 +2,15 @@ var gulp = require('gulp');
     source = require('vinyl-source-stream'),
     browserify = require('browserify'),
     watchify = require('watchify'),
-    reactify = require('reactify'),
     concat = require('gulp-concat'),
-    watch = require('gulp-watch');
-
-
-
-gulp.task('stream', function () {
-    return gulp.src('./src/js/**/*.js')
-        .pipe(watch('./src/js/**/*.js'))
-});
-
-gulp.task('callback', function (cb) {
-    watch('./src/js/**/*.js', function () {
-        gulp.src(['./src/js/app.js', './src/js/*.js'])
-            .pipe(concat('main.js'))
-            .pipe(gulp.dest('./src/'))
-            
-    });
-});
+    babel = require('babelify');
 
 gulp.task('browserify', function() {
-    gulp.src(['./src/js/app.js', './src/js/*.js'])
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('./src/'));
-
     var bundler = browserify({
-        entries: ['./src/main.js'], // Only need initial file, browserify finds the deps
-        transform: [reactify], // We want to convert JSX to normal javascript
+        entries: ['./src/js/app.jsx'], // Only need initial file, browserify finds the deps // We want to convert JSX to normal javascript
         debug: true, // Gives us sourcemapping
         cache: {}, packageCache: {}, fullPaths: true // Requirement of watchify
-    });
+    }).transform(babel, {presets: ["es2015", "react"]});
     var watcher  = watchify(bundler);
 
     return watcher
@@ -42,13 +20,13 @@ gulp.task('browserify', function() {
         watcher.bundle() // Create new bundle that uses the cache for high performance
         .pipe(source('main.js'))
     // This is where you add uglifying etc.
-        .pipe(gulp.dest('./build/js'));
+        .pipe(gulp.dest('./src/preset'));
         console.log('Updated!', (Date.now() - updateStart) + 'ms');
     })
     .bundle() // Create the initial bundle when starting the task
     .pipe(source('main.js'))
-    .pipe(gulp.dest('./build/js'));
-});
+    .pipe(gulp.dest('./src/preset'));
+}); 
 
 // I added this so that you see how to run two watch tasks
 
@@ -62,4 +40,4 @@ gulp.task('browserify', function() {
 
 
 // Just running the two tasks
-gulp.task('default', ['stream','callback','browserify']);
+gulp.task('default', ['browserify']);
