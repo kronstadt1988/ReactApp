@@ -1,33 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CommentBox from './components/header.jsx';
+import Layout from './components/layout.jsx';
+import Header from './components/header-components/header.jsx';
+import Body from './components/body-components/body.jsx';
+import Footer from './components/footer-components/footer.jsx';
 
-export default class CommentLox extends React.Component{
+import { Router, Route, Link, browserHistory } from 'react-router'
 
-  constructor(){
-    super();
-    this.state = {
-      name : "Alberto"
-    }
-}
-
-  componentDidMount (){ 
-    console.log(this)
-     //this.setState({name : "TNT"})  
-  }
-
+class App extends React.Component {
   render(){
-    return(
-      <div>
-    <CommentBox />
-    uPDATE 6 18 1
+    return (
+      <div>       
+        <Layout/>
+        {this.props.children}
       </div>
     )
   }
 }
 
-const app = document.getElementById('example');
-const app2 = document.getElementById('example2');
+const app = document.getElementById('example')
 
-ReactDOM.render(<CommentLox/>, app);
+
+ReactDOM.render(
+  <Router history={browserHistory}>
+    <Route path="/" component={App}>
+      <Route path="/layout(/: layoutId)" component={Layout} />
+      <Route path="/header" component={Header} />
+      <Route path="/body" component={Body} />
+      <Route path="/footer" component={Footer} />
+    </Route>
+  </Router>
+, app)
+
+// ReactDOM.render(<App/>, app)
+
+
 

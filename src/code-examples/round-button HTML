@@ -1,0 +1,15 @@
+<div className="round-button">
+	<div className="round-button-circle">
+		<a href="http://example.com" className="round-button">
+			Discover a Movie
+		</a>
+	</div>
+</div>
+
+<div className="round-button">
+	<div className="round-button-circle">
+		<a href="http://example.com" className="round-button">
+			Discover a Movie
+		</a>
+	</div>
+</div>
